@@ -34,3 +34,9 @@ LEFT JOIN orderdetails ON products.productCode=orderdetails.productCode
 WHERE orderNumber IS NULL;
 
 -- 5. How much has each customer paid in total?
+SELECT C.customerName, sum(P.amount) AS 'Total Paid'
+FROM customers C
+JOIN payments P
+ON c.customerNumber=p.customerNumber
+GROUP BY customerName
+ORDER BY sum(P.amount);
