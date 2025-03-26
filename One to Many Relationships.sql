@@ -40,3 +40,11 @@ JOIN payments P
 ON c.customerNumber=p.customerNumber
 GROUP BY customerName
 ORDER BY sum(P.amount);
+
+-- 6. How many orders have been placed by Herkku Gifts?
+SELECT COUNT(O.customerNumber) AS 'Number of orders', c.customerName
+FROM customers c
+JOIN orders O
+ON c.customerNumber=O.customerNumber
+WHERE c.customerName='Herkku Gifts'
+GROUP BY c.customerName;
