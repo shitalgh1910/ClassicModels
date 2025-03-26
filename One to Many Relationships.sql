@@ -48,3 +48,34 @@ JOIN orders O
 ON c.customerNumber=O.customerNumber
 WHERE c.customerName='Herkku Gifts'
 GROUP BY c.customerName;
+-- 7 Who are the employees working in Boston Office?
+SELECT e.employeeNumber,CONCAT_WS(' ',e.firstName,e.lastName) AS 'Full Name',o.city FROM employees e
+JOIN offices o
+ON e.officeCode=o.officeCode
+WHERE o.city='Boston';
+
+-- Subquery
+SELECT e.employeeNumber, CONCAT_WS(' ', e.firstName, e.lastName) AS 'Full Name' 
+FROM employees e
+WHERE e.officeCode=(
+SELECT o.officeCode FROM offices o WHERE city='Boston'
+);
+
+-- CTE
+WITH BostonOffices AS(
+SELECT officeCode FROM offices WHERE city='Boston')
+SELECT e.employeeNumber, CONCAT_WS(' ',e.firstName, e.lastName) AS 'Full Name' 
+FROM employees e
+JOIN BostonOffices BO ON e.officeCode=BO.officeCode;
+
+-- 8. Which customers have made total payment greater than 100,000, and who has paid the highest
+SELECT c.customerNumber, c.customerName, p.amount FROM customers c
+JOIN payments p 
+ON c.customerNumber=p.customerNumber
+WHERE p.amount>100000
+ORDER BY p.amount DESC;
+
+-- USING SUBQUERY
+SELECT c.customerNumber, c.customerName FROM customers c
+WHERE c.customerNumber IN (SELECT p.customerNumber FROM payments p where p.amount>100000
+ORDER BY p.amount DESC);
