@@ -79,3 +79,18 @@ ORDER BY p.amount DESC;
 SELECT c.customerNumber, c.customerName FROM customers c
 WHERE c.customerNumber IN (SELECT p.customerNumber FROM payments p where p.amount>100000
 ORDER BY p.amount DESC);
+-- 9. What is the total value of orders that are currently "On Hold"?
+ -- This question calculates the total values of orders with a status "On hold". it is useful for financial forecasting and identifying potential revenue is yet to be processed.
+ SELECT O.orderNumber, SUM(O.quantityOrdered*O.priceEach) AS Amount,ord.status
+ FROM orderdetails AS O
+ JOIN orders AS ord
+ ON O.orderNumber=ord.orderNumber
+ WHERE ord.status="On Hold"
+ GROUP BY O.orderNumber;
+ 
+ -- 10. How many "On Hold" orders each customer Have?
+ set @status:= 'On Hold';
+select customerName, count(orderNumber) as num_orders
+from customers 
+join orders on (orders.customerNumber = customers.customerNumber and orders.status=@status)
+group by 1;
